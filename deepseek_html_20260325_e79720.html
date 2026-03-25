@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LORD NELLY STORIES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #ffd700;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header .author {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .nav {
+            background: white;
+            padding: 12px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .nav a:hover {
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        .search-box {
+            padding: 15px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .search-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            border-left: 4px solid #ffd700;
+            padding-left: 12px;
+        }
+        .categories-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .category-tag {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .category-tag:hover {
+            background: #667eea;
+            color: white;
+        }
+        .story-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .story-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .story-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .story-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .story-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .story-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .story-cat {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #667eea;
+        }
+        .story-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .status-active {
+            background: #4caf50;
+            color: white;
+        }
+        .status-completed {
+            background: #ff9800;
+            color: white;
+        }
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+        .admin-link:hover {
+            opacity: 1;
+        }
+        @media (max-width: 480px) {
+            body { font-size: 14px; }
+            .header h1 { font-size: 24px; }
+            .section { padding: 15px; }
+            .story-title { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 LORD NELLY STORIES</h1>
+            <div class="author">By LORD NELLY</div>
+            <div class="bot-status" id="botStatus">🤖 Admin Controlled • Generate Stories</div>
+        </div>
+        
+        <div class="nav">
+            <a href="#" onclick="loadPage('home')">🏠 Home</a>
+            <a href="#" onclick="loadPage('categories')">📚 Categories</a>
+            <a href="#" onclick="loadPage('latest')">🆕 Latest</a>
+            <a href="#" onclick="loadPage('ongoing')">⚡ Ongoing</a>
+        </div>
+        
+        <div class="search-box">
+            <form class="search-form" onsubmit="searchStories(event)">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search stories by title or category..." required>
+                <button type="submit" class="search-btn">🔍 Search</button>
+            </form>
+        </div>
+        
+        <div id="content">
+            <div class="section">
+                <div class="section-title">🔥 LATEST STORIES</div>
+                <div id="storiesList" class="loading">Loading stories...</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">⭐ POPULAR CATEGORIES</div>
+                <div id="categoriesList" class="categories-grid loading">Loading categories...</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📖 LORD NELLY STORIES - 100% Interesting Stories</p>
+            <p>🎮 Admin Controlled • Generate Stories Any Time</p>
+            <p>📱 Works on Every Phone • No Login Required</p>
+        </div>
+    </div>
+    
+    <a href="admin.html" class="admin-link">🔐 Admin Panel</a>
+
+    <script>
+        // Storage key for localStorage
+        const STORAGE_KEY = 'lord_nelly_stories';
+        
+        // Initialize stories data
+        let storiesData = {
+            stories: [],
+            nextId: 1
+        };
+        
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                storiesData = JSON.parse(saved);
+            } else {
+                // Add mock stories
+                storiesData.stories = [
+                    {
+                        id: 1,
+                        title: "GHOST OF AJEGUNLE",
+                        author: "LORD NELLY",
+                        categories: ["18+", "Action", "Gangster", "Rich vs Poor"],
+                        description: "From the filthy streets of Lagos to the billionaire's mansion. James 'Ghost' Okonkwo was born with nothing. Now he controls the city's most feared gang. But when he falls for the governor's daughter, a forbidden love ignites a war that will drown the city in blood...",
+                        status: "active",
+                        current_chapter: 3,
+                        total_chapters: 0,
+                        created_at: new Date().toISOString(),
+                        chapters: [
+                            { number: 1, title: "Born in the Gutter", content: "The stench of decay hung over Ajegunle like a dying man's last breath. James Okonkwo was seven years old when he first tasted blood. Not his own—never his own. His mother's. She came home that night with her dress torn, her lip split open, and her eyes empty...\n\n'James,' she whispered, pulling him close in their cardboard shack. 'You must never be weak. In this life, they eat the weak. You understand me?'\n\nHe didn't understand. He was seven. He understood hunger. He understood the rats that bit his feet while he slept. But he understood his mother's blood on his fingers.\n\n'I understand, Mama,' he said.\n\nShe smiled, and it was the last time he ever saw her smile.\n\nThree days later, she was dead." },
+                            { number: 2, title: "The Ghost Rises", content: "Fifteen years later. The club was called Paradise, but there was nothing heavenly about it. Men in expensive suits sat in velvet booths, bottles of Hennessy on every table. Women with skin like dark chocolate draped themselves over the clientele. James 'Ghost' Okonkwo sat in the corner booth, a glass of whiskey untouched in front of him. At twenty-two, he was already a legend in Lagos...\n\n'Oga,' his lieutenant, Chidi, whispered, leaning close. 'The deal is set. Osimiri people dey wait for us for the back.' (Boss, the deal is set. The river people are waiting for us in the back.)\n\nJames didn't move. 'How many?'\n\n'Twenty of their boys. All armed.'\n\n'Make them twenty-one.' James finally picked up his glass. 'When they see my face, add one more to that count—their boss.'" },
+                            { number: 3, title: "Blood on the Streets", content: "The warehouse was dark, smelled of rust and death. James walked in alone, hands empty. Twenty men surrounded him. Guns raised. 'You think I'm scared?' James laughed. 'I've been dead since I was seven. You can't kill what's already dead.' The first man fired. James moved like water. The bullet missed. His knife found the man's throat. Blood sprayed. Then chaos..." }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        title: "EASTLANDS RULER",
+                        author: "LORD NELLY",
+                        categories: ["18+", "Action", "Gangster", "Poor"],
+                        description: "In the heart of Nairobi's Eastlands, Kamau rises from a matatu tout to become the most feared kingpin. But when his childhood sweetheart is taken by a rival gang, he must choose between power and love.",
+                        status: "active",
+                        current_chapter: 5,
+                        total_chapters: 0,
+                        created_at: new Date().toISOString(),
+                        chapters: [
+                            { number: 1, title: "Matatu Boy", content: "The matatu screeched to a halt at the stage, its bass thumping through the neighborhood. 'Saba!' the tout screamed, hanging off the door. 'Toka! Toka! Wacha ujinga!' (Get in! Move! Move! Stop wasting time!) Kamau jumped off, his pockets empty. He'd made two thousand bob today—enough for food, barely enough for rent...\n\nBut Kamau had bigger plans. 'Mzeze,' he called to the driver. 'Tomorrow, I bring investors. Real ones. We getting our own matatu.'\n\nThe driver laughed. 'Wewe ni mjinga. Where you get money for matatu? That's half million, boy!'\n\nKamau smiled. 'I know a guy who knows a guy who robbed a guy.'" }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        title: "SINS OF THE FLESH",
+                        author: "LORD NELLY",
+                        categories: ["18+", "Sex", "Romance", "Rich", "Poor"],
+                        description: "Nigerian billionaire Ade meets Kenyan maid Zuri. Their forbidden passion ignites a fire that burns through both their worlds. Secrets from both their pasts threaten to destroy everything.",
+                        status: "completed",
+                        current_chapter: 12,
+                        total_chapters: 12,
+                        created_at: new Date().toISOString(),
+                        chapters: []
+                    }
+                ];
+                storiesData.nextId = 4;
+                saveData();
+            }
+            renderHome();
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(storiesData));
+        }
+        
+        // Get all stories
+        function getStories() {
+            return storiesData.stories;
+        }
+        
+        // Get story by ID
+        function getStory(id) {
+            return storiesData.stories.find(s => s.id === parseInt(id));
+        }
+        
+        // Get all categories with counts
+        function getAllCategories() {
+            const allCats = ['18+', 'Action', 'Science', 'Thriller', 'School Bully', 'High School Fight', 'Sex', 'Rich', 'Poor', 'Gangster', 'Love', 'Romance', 'Tears'];
+            const counts = {};
+            storiesData.stories.forEach(story => {
+                story.categories.forEach(cat => {
+                    counts[cat] = (counts[cat] || 0) + 1;
+                });
+            });
+            return allCats.map(cat => ({ name: cat, count: counts[cat] || 0 }));
+        }
+        
+        // Get stories by category
+        function getStoriesByCategory(category) {
+            return storiesData.stories.filter(s => s.categories.includes(category));
+        }
+        
+        // Search stories
+        function searchStoriesByQuery(query) {
+            const q = query.toLowerCase();
+            return storiesData.stories.filter(s => 
+                s.title.toLowerCase().includes(q) || 
+                s.description.toLowerCase().includes(q) ||
+                s.categories.some(c => c.toLowerCase().includes(q))
+            );
+        }
+        
+        // Get latest stories
+        function getLatestStories() {
+            return [...storiesData.stories].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        }
+        
+        // Get ongoing stories
+        function getOngoingStories() {
+            return storiesData.stories.filter(s => s.status === 'active');
+        }
+        
+        // Render home page
+        function renderHome() {
+            const stories = getLatestStories().slice(0, 10);
+            const categories = getAllCategories();
+            
+            const storiesHtml = stories.map(story => `
+                <a href="#" onclick="viewStory(${story.id}); return false;" class="story-card">
+                    <div class="story-title">
+                        ${escapeHtml(story.title)}
+                        ${story.status === 'active' ? 
+                            `<span class="status-badge status-active">🔥 Chapter ${story.current_chapter}/?</span>` : 
+                            `<span class="status-badge status-completed">✓ Complete • ${story.total_chapters} Chapters</span>`}
+                    </div>
+                    <div class="story-meta">
+                        By ${story.author} • ${new Date(story.created_at).toLocaleDateString()}
+                    </div>
+                    <div class="story-categories">
+                        ${story.categories.slice(0, 5).map(cat => `<span class="story-cat">${escapeHtml(cat)}</span>`).join('')}
+                    </div>
+                    <div class="story-desc">
+                        ${escapeHtml(story.description.substring(0, 150))}${story.description.length > 150 ? '...' : ''}
+                    </div>
+                </a>
+            `).join('');
+            
+            const categoriesHtml = categories.slice(0, 12).map(cat => `
+                <a href="#" onclick="viewCategory('${cat.name}'); return false;" class="category-tag">${escapeHtml(cat.name)} (${cat.count})</a>
+            `).join('');
+            
+            document.getElementById('storiesList').innerHTML = storiesHtml || '<p>No stories yet. Go to Admin Panel to create one!</p>';
+            document.getElementById('categoriesList').innerHTML = categoriesHtml;
+        }
+        
+        // View story detail
+        function viewStory(id) {
+            const story = getStory(id);
+            if (!story) return;
+            
+            const chaptersHtml = story.chapters.map(chap => `
+                <a href="#" onclick="viewChapter(${story.id}, ${chap.number}); return false;" class="chapter-item" style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:10px;display:block;text-decoration:none;color:inherit;">
+                    <div style="font-size:18px;font-weight:bold;color:#667eea;margin-bottom:5px;">
+                        Chapter ${chap.number}: ${escapeHtml(chap.title)}
+                    </div>
+                    <div style="font-size:12px;color:#666;">
+                        Posted ${new Date(story.created_at).toLocaleDateString()} • ~10 min read
+                    </div>
+                </a>
+            `).join('');
+            
+            const comments = JSON.parse(localStorage.getItem(`comments_${story.id}`) || '[]');
+            const commentsHtml = comments.map(c => `
+                <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #ddd;margin-bottom:10px;">
+                    <div style="font-weight:bold;color:#667eea;margin-bottom:5px;">${escapeHtml(c.name)}</div>
+                    <div style="font-size:11px;color:#999;margin-bottom:10px;">${new Date(c.created_at).toLocaleString()}</div>
+                    <div style="font-size:14px;">${escapeHtml(c.comment)}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('content').innerHTML = `
+                <a href="#" onclick="renderHome(); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Home</a>
+                
+                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px 20px;">
+                    <h1 style="font-size:28px;margin-bottom:10px;">${escapeHtml(story.title)}</h1>
+                    <div style="font-size:14px;opacity:0.9;margin-bottom:15px;">
+                        By ${story.author} • 
+                        ${story.status === 'active' ? `Ongoing • ${story.current_chapter} Chapters Published` : `Completed • ${story.total_chapters} Total Chapters`}
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                        ${story.categories.map(cat => `<a href="#" onclick="viewCategory('${cat}'); return false;" style="background:rgba(255,255,255,0.2);padding:5px 12px;border-radius:20px;font-size:12px;text-decoration:none;color:white;">#${escapeHtml(cat)}</a>`).join('')}
+                    </div>
+                </div>
+                
+                <div style="background:#f9f9f9;padding:20px;margin:20px;border-radius:12px;border-left:4px solid #ffd700;">
+                    <h3 style="margin-bottom:10px;color:#667eea;">📖 Story Description</h3>
+                    <p style="color:#666;">${escapeHtml(story.description)}</p>
+                </div>
+                
+                <div style="padding:20px;">
+                    <div style="font-size:20px;font-weight:bold;margin-bottom:20px;border-left:4px solid #ffd700;padding-left:12px;">📚 ALL CHAPTERS</div>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        ${chaptersHtml || '<p style="text-align:center;padding:40px;color:#999;">No chapters yet. Admin will generate soon!</p>'}
+                    </div>
+                </div>
+                
+                <div style="padding:20px;background:#f9f9f9;margin:20px;border-radius:12px;">
+                    <div style="font-size:20px;font-weight:bold;margin-bottom:20px;border-left:4px solid #ffd700;padding-left:12px;">💬 READER COMMENTS</div>
+                    
+                    <form onsubmit="addComment(event, ${story.id}, null)">
+                        <input type="text" id="commentName" placeholder="Your Name *" required style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;">
+                        <textarea id="commentText" placeholder="Share your thoughts about this story... *" required style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;min-height:100px;"></textarea>
+                        <button type="submit" style="background:#667eea;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;">📝 Post Comment</button>
+                    </form>
+                    
+                    <div style="margin-top:20px;">
+                        ${commentsHtml || '<div style="text-align:center;color:#999;padding:20px;">💬 No comments yet. Be the first!</div>'}
+                    </div>
+                </div>
+                
+                <div style="background:#333;color:white;text-align:center;padding:20px;">
+                    <p>📖 LORD NELLY STORIES - 100% Interesting Guaranteed</p>
+                </div>
+            `;
+            
+            window.scrollTo(0, 0);
+        }
+        
+        // View chapter
+        function viewChapter(storyId, chapterNum) {
+            const story = getStory(storyId);
+            const chapter = story.chapters.find(c => c.number === chapterNum);
+            if (!chapter) return;
+            
+            const prevChapter = chapterNum > 1 ? story.chapters.find(c => c.number === chapterNum - 1) : null;
+            const nextChapter = story.chapters.find(c => c.number === chapterNum + 1);
+            
+            const comments = JSON.parse(localStorage.getItem(`comments_${storyId}_${chapterNum}`) || '[]');
+            const commentsHtml = comments.map(c => `
+                <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #ddd;margin-bottom:10px;">
+                    <div style="font-weight:bold;color:#667eea;margin-bottom:5px;">${escapeHtml(c.name)}</div>
+                    <div style="font-size:11px;color:#999;margin-bottom:10px;">${new Date(c.created_at).toLocaleString()}</div>
+                    <div style="font-size:14px;">${escapeHtml(c.comment)}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('content').innerHTML = `
+                <a href="#" onclick="viewStory(${storyId}); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Story</a>
+                
+                <div style="padding:30px 25px;">
+                    <h1 style="font-size:28px;margin-bottom:10px;">Chapter ${chapter.number}: ${escapeHtml(chapter.title)}</h1>
+                    <div style="font-size:14px;color:#999;border-bottom:1px solid #ddd;padding-bottom:20px;margin-bottom:30px;">
+                        By LORD NELLY • ~10 min read • 🔥 100% Interesting
+                    </div>
+                    
+                    <div style="font-size:18px;line-height:1.8;text-align:justify;">
+                        ${escapeHtml(chapter.content).replace(/\n/g, '<br>')}
+                    </div>
+                    
+                    <div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid #ddd;gap:15px;">
+                        ${prevChapter ? `<a href="#" onclick="viewChapter(${storyId}, ${prevChapter.number}); return false;" style="background:#667eea;color:white;text-decoration:none;padding:12px;border-radius:8px;text-align:center;flex:1;">← Previous Chapter</a>` : `<span style="background:#ccc;padding:12px;border-radius:8px;text-align:center;flex:1;">← No Previous</span>`}
+                        ${nextChapter ? `<a href="#" onclick="viewChapter(${storyId}, ${nextChapter.number}); return false;" style="background:#667eea;color:white;text-decoration:none;padding:12px;border-radius:8px;text-align:center;flex:1;">Next Chapter →</a>` : `<span style="background:#ccc;padding:12px;border-radius:8px;text-align:center;flex:1;">${story.status === 'active' ? '⏳ Next Chapter Coming Soon...' : '→ The End'}</span>`}
+                    </div>
+                    
+                    <a href="#" onclick="viewStory(${storyId}); return false;" style="display:block;text-align:center;margin-top:20px;color:#667eea;">← Back to All Chapters</a>
+                </div>
+                
+                <div style="padding:20px;background:#f9f9f9;margin:20px;border-radius:12px;">
+                    <div style="font-size:20px;font-weight:bold;margin-bottom:20px;border-left:4px solid #ffd700;padding-left:12px;">💬 READER COMMENTS (Chapter ${chapter.number})</div>
+                    
+                    <form onsubmit="addComment(event, ${storyId}, ${chapter.number})">
+                        <input type="text" id="commentName" placeholder="Your Name *" required style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;">
+                        <textarea id="commentText" placeholder="What did you think of this chapter? *" required style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;min-height:100px;"></textarea>
+                        <button type="submit" style="background:#667eea;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;">📝 Post Comment</button>
+                    </form>
+                    
+                    <div style="margin-top:20px;">
+                        ${commentsHtml || '<div style="text-align:center;color:#999;padding:20px;">💬 No comments yet on this chapter.</div>'}
+                    </div>
+                </div>
+                
+                <div style="background:#333;color:white;text-align:center;padding:20px;">
+                    <p>📖 LORD NELLY STORIES - Every Chapter is a Masterpiece</p>
+                </div>
+            `;
+            
+            window.scrollTo(0, 0);
+        }
+        
+        // Add comment
+        function addComment(event, storyId, chapterNum) {
+            event.preventDefault();
+            const name = document.getElementById('commentName').value;
+            const comment = document.getElementById('commentText').value;
+            
+            if (!name || !comment) return;
+            
+            const key = chapterNum ? `comments_${storyId}_${chapterNum}` : `comments_${storyId}`;
+            const comments = JSON.parse(localStorage.getItem(key) || '[]');
+            comments.unshift({
+                name: name,
+                comment: comment,
+                created_at: new Date().toISOString()
+            });
+            localStorage.setItem(key, JSON.stringify(comments));
+            
+            if (chapterNum) {
+                viewChapter(storyId, chapterNum);
+            } else {
+                viewStory(storyId);
+            }
+        }
+        
+        // View category
+        function viewCategory(category) {
+            const stories = getStoriesByCategory(category);
+            
+            const storiesHtml = stories.map(story => `
+                <a href="#" onclick="viewStory(${story.id}); return false;" class="story-card">
+                    <div class="story-title">
+                        ${escapeHtml(story.title)}
+                        ${story.status === 'active' ? `<span class="status-badge status-active">🔥 Ongoing</span>` : `<span class="status-badge status-completed">✓ Complete</span>`}
+                    </div>
+                    <div class="story-meta">By ${story.author} • ${story.current_chapter}/${story.total_chapters || '?'} chapters</div>
+                    <div class="story-categories">
+                        ${story.categories.slice(0, 5).map(cat => `<span class="story-cat">${escapeHtml(cat)}</span>`).join('')}
+                    </div>
+                </a>
+            `).join('');
+            
+            document.getElementById('content').innerHTML = `
+                <a href="#" onclick="renderHome(); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Home</a>
+                
+                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px 20px;text-align:center;">
+                    <div style="font-size:32px;font-weight:bold;">#${escapeHtml(category)}</div>
+                    <div style="margin-top:5px;">${stories.length} stories found</div>
+                </div>
+                
+                <div style="padding:20px;">
+                    ${storiesHtml || '<div style="text-align:center;padding:40px;color:#999;">😢 No stories in this category yet.</div>'}
+                </div>
+                
+                <div style="background:#333;color:white;text-align:center;padding:20px;">
+                    <p>📖 LORD NELLY STORIES</p>
+                </div>
+            `;
+        }
+        
+        // Search stories
+        function searchStories(event) {
+            event.preventDefault();
+            const query = document.getElementById('searchInput').value;
+            const stories = searchStoriesByQuery(query);
+            
+            const storiesHtml = stories.map(story => `
+                <a href="#" onclick="viewStory(${story.id}); return false;" class="story-card">
+                    <div class="story-title">
+                        ${escapeHtml(story.title)}
+                        ${story.status === 'active' ? `<span class="status-badge status-active">🔥 Ongoing</span>` : `<span class="status-badge status-completed">✓ Complete</span>`}
+                    </div>
+                    <div class="story-meta">By ${story.author} • ${story.current_chapter}/${story.total_chapters || '?'} chapters</div>
+                    <div class="story-categories">
+                        ${story.categories.slice(0, 5).map(cat => `<span class="story-cat">${escapeHtml(cat)}</span>`).join('')}
+                    </div>
+                </a>
+            `).join('');
+            
+            document.getElementById('content').innerHTML = `
+                <a href="#" onclick="renderHome(); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Home</a>
+                
+                <div style="background:#f9f9f9;padding:20px;text-align:center;">
+                    <div style="font-size:20px;font-weight:bold;color:#667eea;">"${escapeHtml(query)}"</div>
+                    <div style="color:#666;margin-top:5px;">${stories.length} stories found</div>
+                </div>
+                
+                <div style="padding:20px;">
+                    ${storiesHtml || '<div style="text-align:center;padding:40px;color:#999;">😢 No stories found.</div>'}
+                </div>
+                
+                <div style="background:#333;color:white;text-align:center;padding:20px;">
+                    <p>📖 LORD NELLY STORIES</p>
+                </div>
+            `;
+        }
+        
+        // Load page
+        function loadPage(page) {
+            if (page === 'home') {
+                renderHome();
+            } else if (page === 'categories') {
+                const categories = getAllCategories();
+                const categoriesHtml = categories.map(cat => `
+                    <a href="#" onclick="viewCategory('${cat.name}'); return false;" style="background:#f9f9f9;border:1px solid #ddd;border-radius:12px;padding:15px 20px;text-decoration:none;color:#667eea;font-weight:bold;flex:1 1 calc(50% - 12px);text-align:center;display:block;">
+                        ${escapeHtml(cat.name)}
+                        <span style="font-size:12px;color:#999;display:block;margin-top:5px;">${cat.count} stories</span>
+                    </a>
+                `).join('');
+                
+                document.getElementById('content').innerHTML = `
+                    <a href="#" onclick="renderHome(); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Home</a>
+                    
+                    <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px;text-align:center;">
+                        <h1>📚 STORY CATEGORIES</h1>
+                        <p>Choose your favorite genre</p>
+                    </div>
+                    
+                    <div style="padding:20px;display:flex;flex-wrap:wrap;gap:12px;">
+                        ${categoriesHtml}
+                    </div>
+                    
+                    <div style="background:#333;color:white;text-align:center;padding:20px;">
+                        <p>📖 LORD NELLY STORIES</p>
+                    </div>
+                `;
+            } else if (page === 'latest') {
+                const stories = getLatestStories();
+                const storiesHtml = stories.map(story => `
+                    <a href="#" onclick="viewStory(${story.id}); return false;" class="story-card">
+                        <div class="story-title">
+                            ${escapeHtml(story.title)}
+                            ${story.status === 'active' ? `<span class="status-badge status-active">🔥 Ongoing</span>` : `<span class="status-badge status-completed">✓ Complete</span>`}
+                        </div>
+                        <div class="story-meta">By ${story.author} • ${new Date(story.created_at).toLocaleDateString()} • ${story.current_chapter}/${story.total_chapters || '?'} chapters</div>
+                        <div class="story-categories">
+                            ${story.categories.slice(0, 5).map(cat => `<span class="story-cat">${escapeHtml(cat)}</span>`).join('')}
+                        </div>
+                    </a>
+                `).join('');
+                
+                document.getElementById('content').innerHTML = `
+                    <a href="#" onclick="renderHome(); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Home</a>
+                    
+                    <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px;text-align:center;">
+                        <h1>🆕 LATEST STORIES</h1>
+                        <p>New stories added regularly</p>
+                    </div>
+                    
+                    <div style="padding:20px;">
+                        ${storiesHtml}
+                    </div>
+                    
+                    <div style="background:#333;color:white;text-align:center;padding:20px;">
+                        <p>📖 LORD NELLY STORIES</p>
+                    </div>
+                `;
+            } else if (page === 'ongoing') {
+                const stories = getOngoingStories();
+                const storiesHtml = stories.map(story => `
+                    <a href="#" onclick="viewStory(${story.id}); return false;" class="story-card">
+                        <div class="story-title">
+                            ${escapeHtml(story.title)}
+                            <span class="status-badge status-active">🔥 Chapter ${story.current_chapter}/?</span>
+                        </div>
+                        <div class="story-meta">By ${story.author} • Last updated ${new Date(story.created_at).toLocaleDateString()}</div>
+                        <div class="story-categories">
+                            ${story.categories.slice(0, 5).map(cat => `<span class="story-cat">${escapeHtml(cat)}</span>`).join('')}
+                        </div>
+                    </a>
+                `).join('');
+                
+                document.getElementById('content').innerHTML = `
+                    <a href="#" onclick="renderHome(); return false;" style="display:inline-block;padding:15px;color:#667eea;text-decoration:none;">← Back to Home</a>
+                    
+                    <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px;text-align:center;">
+                        <h1>⚡ ONGOING STORIES</h1>
+                        <p>New chapters coming soon</p>
+                    </div>
+                    
+                    <div style="padding:20px;">
+                        ${storiesHtml}
+                    </div>
+                    
+                    <div style="background:#333;color:white;text-align:center;padding:20px;">
+                        <p>📖 LORD NELLY STORIES</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
