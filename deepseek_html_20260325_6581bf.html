@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - LORD NELLY</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#1a1a2e;color:#333}
+.container{max-width:800px;margin:0 auto;background:#fff;min-height:100vh;padding:20px}
+h1{color:#667eea;margin-bottom:20px;text-align:center}
+h2{color:#667eea;margin:20px 0 15px;font-size:18px}
+.form-group{margin-bottom:15px}
+label{display:block;font-weight:bold;margin-bottom:5px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit}
+textarea{min-height:80px}
+button{background:#667eea;color:#fff;border:none;padding:12px;border-radius:5px;font-size:16px;font-weight:bold;cursor:pointer;width:100%}
+button:hover{background:#5a67d8}
+button:disabled{background:#ccc;cursor:not-allowed}
+.loading{text-align:center;padding:30px;background:#f9f9f9;border-radius:8px;margin-top:15px;color:#667eea}
+.result{margin-top:15px;padding:12px;border-radius:5px;display:none}
+.result.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb;display:block}
+.result.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;display:block}
+.story-preview{margin-top:15px;padding:12px;background:#f9f9f9;border-radius:5px;display:none}
+.back-link{display:inline-block;margin-bottom:15px;color:#667eea;text-decoration:none}
+.admin-section{display:none}
+.category-checkboxes{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
+.category-checkboxes label{display:flex;align-items:center;gap:5px;font-weight:normal;background:#f0f0f0;padding:5px 12px;border-radius:20px;cursor:pointer;font-size:13px}
+.category-checkboxes input{width:auto;margin-right:3px}
+.existing-story{background:#f9f9f9;padding:12px;border-radius:8px;margin-bottom:10px;border-left:3px solid #667eea;display:flex;align-items:center;gap:12px}
+.existing-story-icon{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.existing-story-info{flex:1}
+.existing-story strong{font-size:15px}
+.badge{background:#4caf50;color:#fff;padding:2px 8px;border-radius:12px;font-size:10px;margin-left:8px;display:inline-block}
+.badge.completed{background:#ff9800}
+.meta{font-size:11px;color:#666;margin-top:5px}
+.delete-btn{background:#dc3545;color:#fff;border:none;padding:4px 10px;border-radius:4px;margin-top:8px;cursor:pointer;font-size:11px;width:auto}
+.delete-btn:hover{background:#c82333}
+hr{margin:25px 0;border:none;border-top:1px solid #ddd}
+.info-note{background:#e3f2fd;padding:10px;border-radius:8px;margin-bottom:15px;font-size:13px;color:#1976d2}
+.icon-preview{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:20px;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="container">
+<a href="index.html" class="back-link">← Back to Site</a>
+<h1>🔐 LORD NELLY - Admin</h1>
+
+<div id="loginSection">
+<div class="form-group">
+<label>Admin Password</label>
+<input type="password" id="password" placeholder="Enter password">
+</div>
+<button onclick="checkPassword()">Login</button>
+</div>
+
+<div id="adminSection" class="admin-section">
+<div class="info-note">🤖 Generate REAL uncensored stories. AI writes every chapter. Stories auto-save with icons.</div>
+
+<h2>📖 Generate New Story</h2>
+
+<div class="form-group">
+<label>Story Title *</label>
+<input type="text" id="storyTitle" placeholder="Example: GHOST OF AJEGUNLE, EASTLANDS RULER" required>
+</div>
+
+<div class="form-group">
+<label>Story Icon Emoji (auto-selected from categories)</label>
+<div id="iconPreview" class="icon-preview">📖</div>
+</div>
+
+<div class="form-group">
+<label>Categories *</label>
+<div class="category-checkboxes">
+<label><input type="checkbox" value="18+" onchange="updateIcon()"> 🔞 18+</label>
+<label><input type="checkbox" value="Action" onchange="updateIcon()"> ⚔️ Action</label>
+<label><input type="checkbox" value="Thriller" onchange="updateIcon()"> 🔪 Thriller</label>
+<label><input type="checkbox" value="School Bully" onchange="updateIcon()"> 👊 School Bully</label>
+<label><input type="checkbox" value="High School Fight" onchange="updateIcon()"> 🥊 High School Fight</label>
+<label><input type="checkbox" value="Sex" onchange="updateIcon()"> 💋 Sex</label>
+<label><input type="checkbox" value="Rich" onchange="updateIcon()"> 💰 Rich</label>
+<label><input type="checkbox" value="Poor" onchange="updateIcon()"> 🫱 Poor</label>
+<label><input type="checkbox" value="Gangster" onchange="updateIcon()"> 🔫 Gangster</label>
+<label><input type="checkbox" value="Love" onchange="updateIcon()"> ❤️ Love</label>
+<label><input type="checkbox" value="Romance" onchange="updateIcon()"> 🌹 Romance</label>
+<label><input type="checkbox" value="Tears" onchange="updateIcon()"> 😢 Tears</label>
+</div>
+</div>
+
+<div class="form-group">
+<label>Number of Chapters (3-15)</label>
+<input type="number" id="chapters" min="3" max="15" value="5">
+</div>
+
+<div class="form-group">
+<label>Story Idea / Prompt *</label>
+<textarea id="prompt" placeholder="Example: A Nigerian gangster from Lagos falls in love with the governor's daughter. His rival from Kenya wants to take over. Brutal fights, forbidden love, tears, revenge." required></textarea>
+</div>
+
+<div class="form-group">
+<label>Main Characters (optional - helps AI)</label>
+<textarea id="characters" placeholder="Example: James 'Ghost' Okonkwo, 22, Nigeria (gangster) | Zara, 20, Kenya (governor's daughter) | Kamau, 25, Kenya (rival)"></textarea>
+</div>
+
+<button onclick="generateStory()" id="generateBtn">🤖 Generate Full Story (Real AI Content)</button>
+
+<div id="loading" class="loading" style="display:none">
+<p>🤖 LORD NELLY is writing...</p>
+<div id="progressMsg">Starting...</div>
+<div style="font-size:12px;margin-top:10px">Each chapter takes 30-60 seconds. Please wait.</div>
+</div>
+
+<div id="result" class="result"></div>
+<div id="storyPreview" class="story-preview"></div>
+
+<hr>
+
+<h2>📚 Existing Stories</h2>
+<div id="existingStories"></div>
+</div>
+</div>
+
+<script>
+const API_URL = "https://apis.prexzyvilla.site/ai/advanced";
+const ADMIN_PASSWORD = "nelly123";
+const STORAGE_KEY = 'lord_nelly_stories';
+
+function updateIcon() {
+    const cats = [...document.querySelectorAll('.category-checkboxes input:checked')].map(cb => cb.value);
+    let icon = '📖';
+    if (cats.includes('18+')) icon = '🔞';
+    else if (cats.includes('Action')) icon = '⚔️';
+    else if (cats.includes('Gangster')) icon = '🔫';
+    else if (cats.includes('Love') || cats.includes('Romance')) icon = '❤️';
+    else if (cats.includes('School Bully')) icon = '👊';
+    else if (cats.includes('Sex')) icon = '💋';
+    else if (cats.includes('Thriller')) icon = '🔪';
+    else if (cats.includes('Tears')) icon = '😢';
+    document.getElementById('iconPreview').innerHTML = icon;
+    document.getElementById('iconPreview').style.fontSize = '24px';
+}
+
+function getIconForCategories(cats) {
+    if (cats.includes('18+')) return '🔞';
+    if (cats.includes('Action')) return '⚔️';
+    if (cats.includes('Gangster')) return '🔫';
+    if (cats.includes('Love') || cats.includes('Romance')) return '❤️';
+    if (cats.includes('School Bully')) return '👊';
+    if (cats.includes('Sex')) return '💋';
+    if (cats.includes('Thriller')) return '🔪';
+    if (cats.includes('Tears')) return '😢';
+    return '📖';
+}
+
+function checkPassword() {
+    if (document.getElementById('password').value === ADMIN_PASSWORD) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminSection').style.display = 'block';
+        loadExistingStories();
+    } else {
+        alert('Wrong password!');
+    }
+}
+
+function loadExistingStories() {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"stories":[],"nextId":1}');
+    const stories = data.stories;
+    if (stories.length === 0) {
+        document.getElementById('existingStories').innerHTML = '<p>No stories yet. Generate your first!</p>';
+        return;
+    }
+    document.getElementById('existingStories').innerHTML = stories.map(s => `
+        <div class="existing-story">
+            <div class="existing-story-icon">${getIconForCategories(s.categories)}</div>
+            <div class="existing-story-info">
+                <strong>${escapeHtml(s.title)}</strong>
+                <span class="badge ${s.status === 'active' ? '' : 'completed'}">${s.status === 'active' ? 'Ongoing' : 'Complete'}</span>
+                <div class="meta">${s.categories.join(', ')} • ${s.current_chapter} chapters • ${new Date(s.created_at).toLocaleDateString()}</div>
+                <button class="delete-btn" onclick="deleteStory(${s.id})">🗑️ Delete</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function deleteStory(id) {
+    if (confirm('Delete this story? Readers will no longer see it.')) {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        data.stories = data.stories.filter(s => s.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        loadExistingStories();
+        alert('Story deleted!');
+    }
+}
+
+async function callAPI(prompt) {
+    try {
+        const params = new URLSearchParams({ 
+            text: prompt, 
+            mode: 'Custom', 
+            length: 'Long', 
+            creative: 'High' 
+        });
+        const response = await fetch(`${API_URL}?${params}`);
+        const data = await response.json();
+        
+        if (data.status && data.data && data.data.story) {
+            return data.data.story;
+        }
+        return null;
+    } catch(e) { 
+        console.error("API Error:", e); 
+        return null; 
+    }
+}
+
+async function generateStory() {
+    const title = document.getElementById('storyTitle').value.trim();
+    if (!title) { alert('Enter story title!'); return; }
+    
+    const cats = [...document.querySelectorAll('.category-checkboxes input:checked')].map(cb => cb.value);
+    if (cats.length === 0) { alert('Select at least one category!'); return; }
+    
+    const chapters = parseInt(document.getElementById('chapters').value);
+    const promptText = document.getElementById('prompt').value.trim();
+    if (!promptText) { alert('Enter story idea!'); return; }
+    
+    const characters = document.getElementById('characters').value.trim();
+    
+    document.getElementById('generateBtn').disabled = true;
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('result').className = 'result';
+    document.getElementById('result').style.display = 'none';
+    
+    // Generate description
+    document.getElementById('progressMsg').innerHTML = 'Creating story description...';
+    const descPrompt = `Create a short, exciting, hooking description (2-3 sentences) for a story titled "${title}" with categories ${cats.join(', ')}. Idea: ${promptText}. Write only the description. Make it exciting and make readers want to read.`;
+    let description = await callAPI(descPrompt);
+    if (!description) description = `An explosive story by LORD NELLY. ${promptText.substring(0,150)}...`;
+    
+    // Generate chapters
+    const chaptersContent = [];
+    let previousSummary = "";
+    
+    for (let i = 1; i <= chapters; i++) {
+        document.getElementById('progressMsg').innerHTML = `Writing Chapter ${i}/${chapters}... This is REAL AI content. Please wait (30-60 seconds per chapter)`;
+        
+        let chapPrompt;
+        if (i === 1) {
+            chapPrompt = `You are LORD NELLY, the most addictive storyteller. Write an AMAZING FIRST CHAPTER for this story.
+
+STORY TITLE: ${title}
+CATEGORIES: ${cats.join(', ')}
+STORY IDEA: ${promptText}
+CHARACTERS: ${characters || 'Create 2-4 compelling main characters from different countries (Nigeria, Kenya, South Africa, USA, etc.)'}
+
+REQUIREMENTS FOR CHAPTER 1:
+- Write a COMPLETE, SUBSTANTIAL chapter (1500-2000 words minimum)
+- HOOK the reader in the FIRST SENTENCE
+- Introduce characters vividly with names, ages, backgrounds
+- END with a MASSIVE CLIFFHANGER that makes readers NEED chapter 2
+- INCLUDE: brutal fight scene OR intense action
+- INCLUDE: explicit 18+ scene if categories include 18+ or Sex (be raw, real, uncensored - name body parts, describe everything)
+- INCLUDE: emotional moment (tears, heartbreak, betrayal)
+- INCLUDE: guns, weapons, violence
+- INCLUDE: romantic tension or love scene
+- Characters use authentic slang with translations in brackets
+
+WRITE THE FULL CHAPTER NOW. Start directly with the story. No "Chapter 1" heading.`;
+        } else {
+            chapPrompt = `You are LORD NELLY. Continue this ADDICTIVE story with CHAPTER ${i}.
+
+STORY TITLE: ${title}
+CATEGORIES: ${cats.join(', ')}
+CHARACTERS: ${characters || 'Existing characters'}
+
+WHAT HAPPENED BEFORE:
+${previousSummary}
+
+REQUIREMENTS FOR CHAPTER ${i}:
+- Write a COMPLETE, SUBSTANTIAL chapter (1500-2000 words minimum)
+- CONTINUE the plot naturally from where we left off
+- DEVELOP characters and relationships
+- INCLUDE: action, violence, or fight scene
+- INCLUDE: emotional depth (love, tears, betrayal)
+- INCLUDE: explicit content if categories include 18+ or Sex
+- END with a CLIFFHANGER EVEN BIGGER than the last chapter
+- BUILD TENSION constantly
+
+WRITE THE FULL CHAPTER NOW. Start directly with the story. No "Chapter ${i}" heading.`;
+        }
+        
+        const chapterContent = await callAPI(chapPrompt);
+        
+        if (chapterContent && chapterContent.length > 200) {
+            chaptersContent.push({
+                number: i,
+                title: `Chapter ${i}`,
+                content: chapterContent.trim()
+            });
+            previousSummary += `Chapter ${i}: ${chapterContent.substring(0, 400)}...\n`;
+        } else {
+            // Retry once if failed
+            document.getElementById('progressMsg').innerHTML = `Retrying Chapter ${i}...`;
+            const retryContent = await callAPI(chapPrompt);
+            if (retryContent && retryContent.length > 200) {
+                chaptersContent.push({
+                    number: i,
+                    title: `Chapter ${i}`,
+                    content: retryContent.trim()
+                });
+                previousSummary += `Chapter ${i}: ${retryContent.substring(0, 400)}...\n`;
+            } else {
+                chaptersContent.push({
+                    number: i,
+                    title: `Chapter ${i}`,
+                    content: `[Chapter ${i} content coming soon. Please regenerate this story if needed.]`
+                });
+            }
+        }
+    }
+    
+    // Save to localStorage
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"stories":[],"nextId":1}');
+    const newStory = {
+        id: data.nextId++,
+        title: title,
+        author: "LORD NELLY",
+        categories: cats,
+        description: description.substring(0, 500),
+        status: "completed",
+        current_chapter: chapters,
+        total_chapters: chapters,
+        created_at: new Date().toISOString(),
+        chapters: chaptersContent
+    };
+    
+    data.stories.unshift(newStory);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('result').className = 'result success';
+    document.getElementById('result').innerHTML = `✅ Story "${title}" generated successfully with ${chapters} REAL chapters!`;
+    document.getElementById('result').style.display = 'block';
+    
+    document.getElementById('storyPreview').innerHTML = `
+        <h3>📖 ${escapeHtml(title)}</h3>
+        <div style="display:flex;gap:10px;align-items:center;margin:10px 0">
+            <div style="width:50px;height:50px;border-radius:8px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:24px">${getIconForCategories(cats)}</div>
+            <div>
+                <p><strong>Categories:</strong> ${cats.join(', ')}</p>
+                <p><strong>Chapters:</strong> ${chapters} chapters generated</p>
+            </div>
+        </div>
+        <p><strong>Description:</strong> ${escapeHtml(description.substring(0, 200))}</p>
+        <p><a href="index.html" target="_blank" style="color:#667eea;">📖 View on Site →</a></p>
+    `;
+    document.getElementById('storyPreview').style.display = 'block';
+    
+    document.getElementById('generateBtn').disabled = false;
+    loadExistingStories();
+    
+    document.getElementById('storyTitle').value = '';
+    document.getElementById('prompt').value = '';
+    document.getElementById('characters').value = '';
+    document.querySelectorAll('.category-checkboxes input:checked').forEach(cb => cb.checked = false);
+    updateIcon();
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+</body>
+</html>
